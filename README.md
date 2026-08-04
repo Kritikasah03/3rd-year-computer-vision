@@ -1,5 +1,5 @@
 # 3rd-year-computer-vision
-# Face Recognition and Attendance System
+# Face Recognition and Person Tracking
 
 This README explains how to set up and run the project.  
 All commands are written after === and should be executed in the terminal.
