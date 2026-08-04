@@ -1,0 +1,63 @@
+.log-panel {
+  background-color: #1e293b;
+
+  border: 1px solid #334155;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  color: white;
+
+  min-height: 300px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.log-panel h2 {
+  margin-top: 0;
+
+  margin-bottom: 20px;
+
+  font-size: 2rem;
+
+  font-weight: 700;
+}
+
+.log-item {
+  display: flex;
+
+  gap: 15px;
+
+  align-items: center;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid #334155;
+
+  transition: background-color 0.3s ease;
+}
+
+.log-item:last-child {
+  border-bottom: none;
+}
+
+.log-item:hover {
+  background-color: rgba(51, 65, 85, 0.3);
+
+  border-radius: 8px;
+}
+
+.log-time {
+  color: #60a5fa;
+
+  font-weight: 600;
+
+  min-width: 70px;
+}
+
+.log-message {
+  color: #e2e8f0;
+
+  flex: 1;
+}

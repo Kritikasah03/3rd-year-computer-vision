@@ -1,0 +1,40 @@
+.camera-container {
+  background-color: #1e293b;
+
+  border: 1px solid #334155;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 450px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.camera-container h2 {
+  margin-top: 0;
+
+  margin-bottom: 20px;
+
+  font-size: 2rem;
+
+  font-weight: 700;
+}
+
+.camera-container video {
+  width: 100%;
+
+  flex: 1;
+
+  border-radius: 12px;
+
+  object-fit: cover;
+
+  background: black;
+}
