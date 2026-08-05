@@ -1,6 +1,5 @@
 # 3rd-year-computer-vision
 Vision Intelligence Dashboard
-Frontend Developer: Khushi
 
 Features:
 - Live Camera Feed
