@@ -10,11 +10,14 @@
   flex-direction: column;
 
   padding: 20px;
+
+  position: sticky;
+  top: 0;
 }
 
 .sidebar-logo {
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2.2rem;
+  font-weight: 700;
 
   margin-bottom: 40px;
 
@@ -32,13 +35,14 @@
   display: flex;
   align-items: center;
 
-  gap: 12px;
+  gap: 16px;
 
-  padding: 12px;
+  padding: 16px 18px;
 
   border-radius: 10px;
 
-  cursor: pointer;
+  color: white;
+  text-decoration: none;
 
   transition: all 0.3s ease;
 }
@@ -51,4 +55,14 @@
 
 .menu-item.active {
   background-color: #312e81;
+  border-left: 4px solid #a855f7;
 }
+.menu-item svg {
+  font-size: 1.4rem;
+}
+
+.menu-item span {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+

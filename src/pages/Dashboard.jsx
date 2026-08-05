@@ -1,3 +1,12 @@
+
+import {
+  FaBatteryThreeQuarters,
+  FaMicrochip,
+  FaMemory,
+  FaWifi,
+} from "react-icons/fa";
+
+
 import Navbar from "../components/Navbar/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import StatusCard from "../components/StatusCard/StatusCard";
@@ -16,6 +25,7 @@ import {
 } from "../services/robotService";
 
 function Dashboard() {
+  const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState({});
   const [objects, setObjects] = useState([]);
   const [faces, setFaces] = useState([]);
@@ -23,15 +33,19 @@ function Dashboard() {
 
   useEffect(() => {
     const loadData = async () => {
-      const statusData = await getRobotStatus();
-      const objectData = await getDetectedObjects();
-      const faceData = await getRecognizedFaces();
-      const logData = await getLogs();
+      try {
+        const statusData = await getRobotStatus();
+        const objectData = await getDetectedObjects();
+        const faceData = await getRecognizedFaces();
+        const logData = await getLogs();
 
-      setStatus(statusData); // update status state
-      setObjects(objectData); // update detected objects
-      setFaces(faceData); // update faces
-      setSystemLogs(logData); // update logs
+        setStatus(statusData);
+        setObjects(objectData);
+        setFaces(faceData);
+        setSystemLogs(logData);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadData();
@@ -44,36 +58,51 @@ function Dashboard() {
       <div className="main-content">
         <Navbar />
 
-        <div className="dashboard">
+        <div id="dashboard" className="dashboard">
           <StatusCard
             title="Battery"
             value={`${status.battery}%`}
             progress={status.battery}
+             icon={<FaBatteryThreeQuarters />}
           />
 
           <StatusCard
             title="CPU"
             value={`${status.cpu}%`}
             progress={status.cpu}
+            icon={<FaMicrochip />}
           />
 
           <StatusCard
             title="RAM"
             value={`${status.ram}%`}
             progress={status.ram}
+            icon={<FaMemory />}
           />
 
-          <StatusCard title="Network" value={status.network} progress={100} />
+          <StatusCard 
+            title="Network" 
+            value={status.network} progress={100}
+            icon={<FaWifi />} />
 
           <div className="camera-section">
-            <CameraFeed />
+            <div id="camera">
+              <CameraFeed />
+            </div>
 
-            <ObjectList objects={objects} />
+            <div id="objects">
+              <ObjectList objects={objects} loading={loading} />
+            </div>
           </div>
-          <div className="bottom-section">
-            <FaceList faces={faces} />
 
-            <LogPanel logs={systemLogs} />
+          <div className="bottom-section">
+            <div id="faces">
+              <FaceList faces={faces} loading={loading} />
+            </div>
+
+            <div id="logs">
+              <LogPanel logs={systemLogs} loading={loading} />
+            </div>
           </div>
         </div>
       </div>

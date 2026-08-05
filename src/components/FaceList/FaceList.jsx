@@ -1,6 +1,23 @@
 import "./FaceList.css";
 
-function FaceList({ faces }) {
+function FaceList({ faces, loading }) {
+
+  if (loading) {
+  return (
+    <div className="face-list">
+      <h2>Recognized Faces</h2>
+      <p>Loading faces...</p>
+    </div>
+  );
+}
+if (!loading && faces.length === 0) {
+  return (
+    <div className="face-list">
+      <h2>Recognized Faces</h2>
+      <p>No faces detected.</p>
+    </div>
+  );
+}
   return (
     <div className="face-list">
       <h2>Recognized Faces</h2>

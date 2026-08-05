@@ -40,8 +40,9 @@ body {
 
   gap: 20px;
 
-  align-items: start;
+  align-items: stretch;
 }
+
 .bottom-section {
   grid-column: 1 / -1;
 
@@ -52,6 +53,8 @@ body {
   gap: 20px;
 
   margin-top: 20px;
+
+  align-items: stretch;
 }
 
 .placeholder-panel {
@@ -66,4 +69,8 @@ body {
   color: white;
 
   min-height: 300px;
+}
+
+html {
+  scroll-behavior: smooth;
 }

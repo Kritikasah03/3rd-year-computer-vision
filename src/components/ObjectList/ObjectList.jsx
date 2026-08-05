@@ -1,6 +1,23 @@
 import "./ObjectList.css";
 
-function ObjectList({ objects }) {
+function ObjectList({ objects, loading }) {
+
+  if (loading) {
+  return (
+    <div className="object-list">
+      <h2>Detected Objects</h2>
+      <p>Loading objects...</p>
+    </div>
+  );
+}
+if (!loading && objects.length === 0) {
+  return (
+    <div className="object-list">
+      <h2>Detected Objects</h2>
+      <p>No objects detected.</p>
+    </div>
+  );
+}
   return (
     <div className="object-list">
       <h2>Detected Objects</h2>
