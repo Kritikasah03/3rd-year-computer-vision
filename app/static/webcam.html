@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Intelligence HUD - Autonomous Humanoid Robot System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-card: rgba(18, 26, 44, 0.75);
+            --bg-card-hover: rgba(26, 38, 64, 0.85);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --border-active: #38bdf8;
+            --cyan-accent: #00f2fe;
+            --green-glow: #10b981;
+            --red-alert: #ef4444;
+            --amber-warn: #f59e0b;
+            --purple-neon: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #172554 0%, var(--bg-base) 75%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Top 5G Edge Navigation Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            font-size: 28px;
+            filter: drop-shadow(0 0 10px var(--cyan-accent));
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .telemetry-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pill.active {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green-glow);
+            box-shadow: 0 0 8px var(--green-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* Main Grid Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 22px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #e2e8f0;
+        }
+
+        /* Video Feed Container */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 4/3;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        video, canvas.overlay-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        video {
+            transform: scaleX(-1);
+        }
+
+        .video-hud-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hud-badge {
+            background: rgba(10, 15, 30, 0.85);
+            border: 1px solid rgba(0, 242, 254, 0.5);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan-accent);
+        }
+
+        /* Robot Command Alert Banner */
+        .robot-action-banner {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--purple-neon);
+            padding: 10px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .robot-action-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .robot-action-val {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Mode Selector Tabs */
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .mode-tab {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Action Buttons */
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        button.btn {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        /* Multi-Person Face Badges */
+        .faces-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .person-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.7);
+            border-left: 4px solid var(--green-glow);
+        }
+
+        .person-card.unknown {
+            border-left-color: var(--amber-warn);
+        }
+
+        .person-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .person-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .confidence-meter {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 6px;
+            width: 80px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--green-glow);
+        }
+
+        /* Hand Gesture Guide Cards */
+        .gesture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .gesture-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .gesture-item.active {
+            border-color: var(--cyan-accent);
+            background: rgba(0, 242, 254, 0.1);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .gesture-icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        /* Attendance Table */
+        .table-wrap {
+            max-height: 200px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 8px 12px;
+            text-align: left;
+            color: var(--text-muted);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 8px 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+        }
+
+        /* Enrollment Controls */
+        input.text-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        input.text-input:focus {
+            outline: none;
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Status Console */
+        .console-box {
+            background: #050811;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #38bdf8;
+            max-height: 100px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER / 5G TELEMETRY HUD -->
+    <header class="header">
+        <div class="brand-title">
+            <div class="brand-logo">👁</div>
+            <div class="brand-text">
+                <h1>Private 5G Vision Intelligence HUD</h1>
+                <p>Autonomous Humanoid Robot Edge AI Platform</p>
+            </div>
+        </div>
+
+        <div class="telemetry-pills">
+            <div class="pill active">
+                <span class="status-dot"></span>
+                <span>5G SA [N78]: 8.4ms</span>
+            </div>
+            <div class="pill">
+                <span>JETSON NANO: 10W</span>
+            </div>
+            <div class="pill">
+                <span id="activeFacesBadge">0 Faces in View</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <div class="main-layout">
+
+        <!-- LEFT COLUMN: LIVE VIDEO & AI HUD CANVAS -->
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📷 Live Robot Video Feed & Real-Time Multi-AI</span>
+                    <span id="fpsBadge" style="font-size:12px; font-family:'JetBrains Mono'; color:var(--cyan-accent);">FPS: --</span>
+                </div>
+
+                <div class="video-wrapper">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+
+                    <div class="video-hud-overlay">
+                        <span class="hud-badge">HUD: ACTIVE</span>
+                        <span id="inferenceBadge" class="hud-badge">INFERENCE: --ms</span>
+                    </div>
+
+                    <div class="robot-action-banner">
+                        <div>
+                            <div class="robot-action-label">Active Humanoid Action</div>
+                            <div id="activeRobotCommand" class="robot-action-val">STANDBY</div>
+                        </div>
+                        <div id="activeGestureTag" style="font-size:12px; color:var(--purple-neon); font-family:'JetBrains Mono';">NO GESTURE</div>
+                    </div>
+                </div>
+
+                <!-- MODE SELECTOR TABS -->
+                <div class="mode-selector">
+                    <button class="mode-tab active" onclick="setVisionMode('all', this)">🌟 Full Vision Engine</button>
+                    <button class="mode-tab" onclick="setVisionMode('face_only', this)">👤 Multi-Face Only</button>
+                    <button class="mode-tab" onclick="setVisionMode('gesture_only', this)">✋ Gestures Only</button>
+                    <button class="mode-tab" onclick="setVisionMode('object_only', this)">📦 Objects Only</button>
+                </div>
+
+                <!-- CAMERA CONTROLS -->
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="startCamera()">▶ Start Live Camera</button>
+                    <button class="btn btn-danger" onclick="stopCamera()">⏹ Stop Camera</button>
+                </div>
+
+                <!-- STATUS CONSOLE -->
+                <div id="consoleLog" class="console-box">System Initialized. Click "Start Live Camera" to begin multi-person recognition and gesture tracking.</div>
+            </div>
+
+            <!-- ATTENDANCE TABLE -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 Today's Auto-Marked Attendance</span>
+                    <div style="display:flex; gap:8px;">
+                        <button onclick="fetchAttendance()" style="background:transparent; border:1px solid rgba(255,255,255,0.2); color:#fff; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer;">🔄 Refresh</button>
+                        <a href="/api/attendance/export" target="_blank" style="text-decoration:none; background:var(--green-glow); color:#000; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:bold;">📥 Export CSV</a>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Person Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTableBody">
+                            <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No attendance records yet for today.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: MULTI-PERSON FACE LIST, GESTURES, & ENROLLMENT -->
+        <div>
+
+            <!-- MULTI-PERSON DETECTIONS CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">👥 Multi-Person Recognized in Frame</span>
+                    <span id="personCountBadge" style="font-size:11px; color:var(--green-glow); font-family:'JetBrains Mono';">0 detected</span>
+                </div>
+
+                <div id="facesList" class="faces-container">
+                    <div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">
+                        Start camera to detect and recognize multiple people simultaneously.
+                    </div>
+                </div>
+            </div>
+
+            <!-- GESTURE COMMANDS MATRIX -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">✋ Humanoid Gesture Command Set</span>
+                </div>
+
+                <div class="gesture-grid">
+                    <div class="gesture-item" id="g_THUMBS_UP">
+                        <div class="gesture-icon">👍</div>
+                        <div><b>Thumbs Up</b></div>
+                        <div style="color:var(--cyan-accent)">Follow Me</div>
+                    </div>
+                    <div class="gesture-item" id="g_THUMBS_DOWN">
+                        <div class="gesture-icon">👎</div>
+                        <div><b>Thumbs Down</b></div>
+                        <div style="color:var(--amber-warn)">Retreat</div>
+                    </div>
+                    <div class="gesture-item" id="g_FIST">
+                        <div class="gesture-icon">✊</div>
+                        <div><b>Fist</b></div>
+                        <div style="color:var(--red-alert)">E-Stop / Halt</div>
+                    </div>
+                    <div class="gesture-item" id="g_OPEN_PALM">
+                        <div class="gesture-icon">✋</div>
+                        <div><b>Open Palm</b></div>
+                        <div style="color:#e2e8f0">Wait / Hold</div>
+                    </div>
+                    <div class="gesture-item" id="g_POINTING">
+                        <div class="gesture-icon">👉</div>
+                        <div><b>Pointing</b></div>
+                        <div style="color:var(--purple-neon)">Navigate</div>
+                    </div>
+                    <div class="gesture-item" id="g_PEACE">
+                        <div class="gesture-icon">✌️</div>
+                        <div><b>Peace / V</b></div>
+                        <div style="color:var(--green-glow)">Greet / Standby</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENROLLMENT & MODEL TRAINING -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">👤 Face Enrollment & Training</span>
+                </div>
+
+                <input type="text" id="personNameInput" class="text-input" placeholder="Enter person full name (e.g., Kritika Sah)">
+
+                <div class="btn-row">
+                    <button class="btn btn-success" onclick="enrollFace()">📸 Single Photo</button>
+                    <button class="btn btn-primary" onclick="rapidBurstEnroll()">🎥 Rapid 10x Burst</button>
+                </div>
+                <button class="btn btn-purple" style="margin-top:10px; width:100%;" onclick="trainModel()">🧠 Train / Rebuild Model</button>
+
+                <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:12px; color:var(--text-muted);">Enrolled Persons Database:</span>
+                    <button onclick="fetchEnrolledPersons()" style="background:transparent; border:none; color:var(--cyan-accent); font-size:12px; cursor:pointer;">View All ➜</button>
+                </div>
+                <div id="enrolledPersonsList" style="font-size:12px; color:#cbd5e1; font-family:'JetBrains Mono'; margin-top:6px;">Loading enrolled database...</div>
+            </div>
+
+            <!-- EDGE HARDWARE PROFILE SELECTOR -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">⚙️ Edge Target Deployment Profile</span>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <button id="profilePiBtn" class="btn" style="flex:1; background:rgba(225,29,72,0.2); border:1px solid #e11d48; color:#fff; font-size:12px;" onclick="setHardwareProfile('PI')">🍓 Raspberry Pi (CPU Mode)</button>
+                    <button id="profileJetsonBtn" class="btn" style="flex:1; background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#fff; font-size:12px;" onclick="setHardwareProfile('JETSON')">⚡ Jetson Nano (CUDA Mode)</button>
+                </div>
+                <p id="profileDesc" style="font-size:11px; color:var(--text-muted); margin-top:8px; font-family:'JetBrains Mono';">Current: Jetson Nano 10W (Full AI Engine + YOLO + LBPH + Gestures)</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const video = document.getElementById("video");
+        const canvas = document.getElementById("overlayCanvas");
+        const ctx = canvas.getContext("2d");
+        const consoleLog = document.getElementById("consoleLog");
+        const activeFacesBadge = document.getElementById("activeFacesBadge");
+        const personCountBadge = document.getElementById("personCountBadge");
+        const facesList = document.getElementById("facesList");
+        const activeRobotCommand = document.getElementById("activeRobotCommand");
+        const activeGestureTag = document.getElementById("activeGestureTag");
+        const inferenceBadge = document.getElementById("inferenceBadge");
+        const attendanceTableBody = document.getElementById("attendanceTableBody");
+        const enrolledPersonsList = document.getElementById("enrolledPersonsList");
+
+        let stream = null;
+        let isProcessing = false;
+        let processInterval = null;
+        let currentMode = "all";
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+
+        function log(msg) {
+            const time = new Date().toLocaleTimeString();
+            consoleLog.textContent = `[${time}] ${msg}\n` + consoleLog.textContent.slice(0, 500);
+        }
+
+        function setVisionMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll(".mode-tab").forEach(tab => tab.classList.remove("active"));
+            btn.classList.add("active");
+            log(`Vision Mode switched to: ${mode.toUpperCase()}`);
+        }
+
+        async function startCamera() {
+            try {
+                stopCamera();
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" },
+                    audio: false
+                });
+                video.srcObject = stream;
+                log("Camera connected successfully.");
+
+                // Start AI Vision Loop
+                processInterval = setInterval(processFrame, 400); // 2.5 FPS inference loop for real-time responsiveness
+            } catch (err) {
+                log("Camera Error: " + err.message);
+            }
+        }
+
+        function stopCamera() {
+            if (processInterval) {
+                clearInterval(processInterval);
+                processInterval = null;
+            }
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+            video.srcObject = null;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            log("Camera stopped.");
+        }
+
+        async function captureImageBlob() {
+            if (!video.videoWidth) return null;
+            const offscreen = document.createElement("canvas");
+            offscreen.width = video.videoWidth;
+            offscreen.height = video.videoHeight;
+            const offCtx = offscreen.getContext("2d");
+            // Mirror image correctly
+            offCtx.translate(offscreen.width, 0);
+            offCtx.scale(-1, 1);
+            offCtx.drawImage(video, 0, 0, offscreen.width, offscreen.height);
+
+            return new Promise(resolve => offscreen.toBlob(resolve, "image/jpeg", 0.85));
+        }
+
+        async function processFrame() {
+            if (isProcessing || !stream || video.readyState < 2) return;
+            isProcessing = true;
+
+            const t0 = performance.now();
+
+            try {
+                const blob = await captureImageBlob();
+                if (!blob) {
+                    isProcessing = false;
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("image", blob, "frame.jpg");
+
+                const res = await fetch(`/api/vision/process?mode=${currentMode}&include_annotated_image=false`, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await res.json();
+
+                const t1 = performance.now();
+                const latency = Math.round(t1 - t0);
+                inferenceBadge.textContent = `INFERENCE: ${latency}ms`;
+
+                // Update HUD elements
+                updateHUD(data);
+
+            } catch (err) {
+                console.error("Frame processing error:", err);
+            } finally {
+                isProcessing = false;
+            }
+        }
+
+        function updateHUD(data) {
+            if (!data || !data.success) return;
+
+            // Sync canvas resolution with video
+            if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const faces = data.faces || [];
+            const gestures = data.gestures || [];
+            const objects = data.objects || [];
+
+            activeFacesBadge.textContent = `${faces.length} Face(s) in View`;
+            personCountBadge.textContent = `${faces.length} detected`;
+
+            // Draw bounding boxes on canvas (mirrored coords for client video)
+            faces.forEach(f => {
+                const b = f.box;
+                const mirroredX = canvas.width - (b.x + b.w);
+                const color = f.is_recognized ? "#10b981" : "#f59e0b";
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(mirroredX, b.y, b.w, b.h);
+
+                // Label
+                ctx.fillStyle = color;
+                const label = `${f.name.toUpperCase()} (${f.confidence}%)`;
+                ctx.font = "bold 13px JetBrains Mono, sans-serif";
+                ctx.fillRect(mirroredX, Math.max(0, b.y - 20), ctx.measureText(label).width + 10, 20);
+                ctx.fillStyle = "#000";
+                ctx.fillText(label, mirroredX + 5, Math.max(14, b.y - 5));
+            });
+
+            // Update Multi-Person Face List
+            if (faces.length === 0) {
+                facesList.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding:20px;">No faces detected in view.</div>`;
+            } else {
+                facesList.innerHTML = faces.map(f => `
+                    <div class="person-card ${f.is_recognized ? '' : 'unknown'}">
+                        <div>
+                            <div class="person-name">${f.is_recognized ? '✅ ' : '❓ '}${f.name}</div>
+                            <div class="person-meta">Match: ${f.confidence}% | Dist: ${f.distance}</div>
+                            <div class="confidence-meter">
+                                <div class="confidence-fill" style="width:${f.confidence}%; background:${f.is_recognized ? 'var(--green-glow)' : 'var(--amber-warn)'}"></div>
+                            </div>
+                        </div>
+                        <span style="font-size:11px; padding:4px 8px; border-radius:6px; background:${f.is_recognized ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)'}; color:${f.is_recognized ? 'var(--green-glow)' : 'var(--amber-warn)'}; font-weight:bold;">
+                            ${f.is_recognized ? 'VERIFIED' : 'UNKNOWN'}
+                        </span>
+                    </div>
+                `).join("");
+            }
+
+            // Update Gestures & Robot Actions
+            const activeCmd = data.active_robot_command || "STANDBY";
+            activeRobotCommand.textContent = activeCmd;
+
+            document.querySelectorAll(".gesture-item").forEach(item => item.classList.remove("active"));
+
+            if (gestures.length > 0) {
+                const g = gestures[0];
+                activeGestureTag.textContent = `${g.hand.toUpperCase()} HAND: ${g.gesture} (${g.confidence}%)`;
+                const gElement = document.getElementById("g_" + g.gesture);
+                if (gElement) gElement.classList.add("active");
+            } else {
+                activeGestureTag.textContent = "NO GESTURE";
+            }
+
+            // If new face was marked, refresh attendance
+            if (faces.some(f => f.attendance_marked)) {
+                fetchAttendance();
+            }
+        }
+
+        async function rapidBurstEnroll() {
+            const nameInput = document.getElementById("personNameInput");
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert("Please enter person name before starting burst enrollment.");
+                return;
+            }
+            if (!stream) {
+                alert("Please start the camera first.");
+                return;
+            }
+
+            log(`Starting 10x Rapid Multi-Angle Burst for ${name}... Look straight, then tilt left, right, and smile!`);
+            let savedCount = 0;
+
+            for (let i = 1; i <= 10; i++) {
+                log(`📸 Capturing angle ${i}/10... (Turn head slightly)`);
+                const blob = await captureImageBlob();
+                if (blob) {
+                    const formData = new FormData();
+                    formData.append("name", name);
+                    formData.append("image", blob, `burst_${i}.jpg`);
+                    try {
+                        const res = await fetch("/api/vision/enroll", { method: "POST", body: formData });
+                        const r = await res.json();
+                        if (r.success) savedCount++;
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+                // 300ms pause between angles
+                await new Promise(r => setTimeout(r, 300));
+            }
+
+            log(`✅ Burst complete! Saved ${savedCount} angle crops. Auto-training recognition model now...`);
+            await trainModel();
+            fetchEnrolledPersons();
+        }
+
+        let currentProfile = "JETSON";
+        function setHardwareProfile(profile) {
+            currentProfile = profile;
+            const piBtn = document.getElementById("profilePiBtn");
+            const jetBtn = document.getElementById("profileJetsonBtn");
+            const desc = document.getElementById("profileDesc");
+
+            if (profile === "PI") {
+                piBtn.style.background = "#e11d48";
+                jetBtn.style.background = "rgba(16,185,129,0.2)";
+                desc.textContent = "🍓 Profile Active: Raspberry Pi 4/5 (Lightweight CPU Engine, CLAHE, 30+ FPS, Zero GPU dependencies)";
+                log("Edge Hardware Profile set to: RASPBERRY PI (Optimized for ARM CPU)");
+            } else {
+                jetBtn.style.background = "#10b981";
+                piBtn.style.background = "rgba(225,29,72,0.2)";
+                desc.textContent = "⚡ Profile Active: NVIDIA Jetson Nano 10W (Full AI Engine + YOLO + LBPH + Gestures + CUDA)";
+                log("Edge Hardware Profile set to: NVIDIA JETSON NANO (CUDA Mode)");
+            }
+        }
+
+        async function enrollFace() {
+            const nameInput = document.getElementById("personNameInput");
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert("Please enter a person name to enroll.");
+                return;
+            }
+            if (!stream) {
+                alert("Please start the camera first.");
+                return;
+            }
+
+            log(`Capturing face for enrollment: ${name}...`);
+            const blob = await captureImageBlob();
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("image", blob, "enroll.jpg");
+
+            try {
+                const res = await fetch("/api/vision/enroll", { method: "POST", body: formData });
+                const result = await res.json();
+                if (result.success) {
+                    log(`🎉 ENROLLED: ${result.person} (${result.images_saved} images saved).`);
+                    fetchEnrolledPersons();
+                } else {
+                    log(`❌ Enrollment Failed: ${result.message}`);
+                }
+            } catch (err) {
+                log("Enrollment error: " + err.message);
+            }
+        }
+
+        async function trainModel() {
+            log("🧠 Training LBPH Recognition Model on all enrolled faces...");
+            try {
+                const res = await fetch("/api/vision/train", { method: "POST" });
+                const result = await res.json();
+                if (result.success) {
+                    log(`🎉 MODEL TRAINED! Persons: ${result.persons} | Total Faces: ${result.faces_used} | ${result.person_names.join(', ')}`);
+                } else {
+                    log(`❌ Training failed: ${result.message}`);
+                }
+            } catch (err) {
+                log("Training error: " + err.message);
+            }
+        }
+
+        async function fetchEnrolledPersons() {
+            try {
+                const res = await fetch("/api/vision/enrolled-persons");
+                const data = await res.json();
+                if (data.success && data.persons.length > 0) {
+                    enrolledPersonsList.innerHTML = data.persons.map(p => `• <b>${p.name}</b> (${p.images} imgs)`).join(" &nbsp;|&nbsp; ");
+                } else {
+                    enrolledPersonsList.textContent = "No enrolled faces yet.";
+                }
+            } catch (err) {
+                enrolledPersonsList.textContent = "Could not fetch enrolled list.";
+            }
+        }
+
+        async function fetchAttendance() {
+            try {
+                const res = await fetch("/api/attendance/today");
+                const data = await res.json();
+                if (data.success && data.records.length > 0) {
+                    attendanceTableBody.innerHTML = data.records.map(r => `
+                        <tr>
+                            <td>${r.id}</td>
+                            <td><b>${r.name}</b></td>
+                            <td>${r.date}</td>
+                            <td>${r.time}</td>
+                            <td><span style="color:var(--green-glow); font-weight:bold;">PRESENT</span></td>
+                        </tr>
+                    `).join("");
+                } else {
+                    attendanceTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No attendance records yet for today.</td></tr>`;
+                }
+            } catch (err) {
+                console.error("Attendance fetch error:", err);
+            }
+        }
+
+        // Initialize on load
+        fetchEnrolledPersons();
+        fetchAttendance();
+    </script>
+</body>
+</html>
