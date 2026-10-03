@@ -1,4 +1,3 @@
-
 import {
   FaBatteryThreeQuarters,
   FaMicrochip,
@@ -6,14 +5,15 @@ import {
   FaWifi,
 } from "react-icons/fa";
 
-
 import Navbar from "../components/Navbar/Navbar";
-import Sidebar from "../components/Sidebar/Sidebar";
 import StatusCard from "../components/StatusCard/StatusCard";
 import CameraFeed from "../components/CameraFeed/CameraFeed";
 import ObjectList from "../components/ObjectList/ObjectList.jsx";
 import FaceList from "../components/FaceList/FaceList";
 import LogPanel from "../components/LogPanel/LogPanel";
+import VisionEngine from "../components/VisionEngine/VisionEngine";
+import HumanoidGesture from "../components/HumanoidGesture/HumanoidGesture";
+import FaceEnrollment from "../components/FaceEnrollment/FaceEnrollment";
 
 import { useEffect, useState } from "react";
 
@@ -26,10 +26,13 @@ import {
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
+
   const [status, setStatus] = useState({});
   const [objects, setObjects] = useState([]);
   const [faces, setFaces] = useState([]);
   const [systemLogs, setSystemLogs] = useState([]);
+
+  const [visionMode, setVisionMode] = useState("full");
 
   useEffect(() => {
     const loadData = async () => {
@@ -49,63 +52,159 @@ function Dashboard() {
     };
 
     loadData();
-  }, []); // the function executes only once initially when the webpage is painted
+  }, []);
+
+  const handleVisionModeChange = (mode) => {
+    setVisionMode(mode);
+
+    console.log("Vision mode changed:", mode);
+
+    // Backend integration will be added here later.
+  };
 
   return (
     <div className="app-layout">
-      <Sidebar />
 
       <div className="main-content">
+
         <Navbar />
 
         <div id="dashboard" className="dashboard">
-          <StatusCard
-            title="Battery"
-            value={`${status.battery}%`}
-            progress={status.battery}
-             icon={<FaBatteryThreeQuarters />}
-          />
 
-          <StatusCard
-            title="CPU"
-            value={`${status.cpu}%`}
-            progress={status.cpu}
-            icon={<FaMicrochip />}
-          />
+          {/* ==================================================
+              STATUS CARDS
+          ================================================== */}
 
-          <StatusCard
-            title="RAM"
-            value={`${status.ram}%`}
-            progress={status.ram}
-            icon={<FaMemory />}
-          />
+          <div className="status-cards-grid">
 
-          <StatusCard 
-            title="Network" 
-            value={status.network} progress={100}
-            icon={<FaWifi />} />
+            <StatusCard
+              title="Battery"
+              value={`${status.battery}%`}
+              progress={status.battery}
+              icon={<FaBatteryThreeQuarters />}
+            />
 
-          <div className="camera-section">
+            <StatusCard
+              title="CPU"
+              value={`${status.cpu}%`}
+              progress={status.cpu}
+              icon={<FaMicrochip />}
+            />
+
+            <StatusCard
+              title="RAM"
+              value={`${status.ram}%`}
+              progress={status.ram}
+              icon={<FaMemory />}
+            />
+
+            <StatusCard
+              title="Network"
+              value={status.network}
+              progress={100}
+              icon={<FaWifi />}
+            />
+
+          </div>
+
+
+          {/* ==================================================
+              CAMERA MONITORING
+          ================================================== */}
+
+          <div className="camera-monitoring-container">
+
+            {/* CAMERA FEED */}
+
             <div id="camera">
               <CameraFeed />
             </div>
 
-            <div id="objects">
-              <ObjectList objects={objects} loading={loading} />
-            </div>
-          </div>
 
-          <div className="bottom-section">
-            <div id="faces">
-              <FaceList faces={faces} loading={loading} />
+            {/* VISION ENGINE */}
+
+            <div id="vision-engine">
+              <VisionEngine
+                onModeChange={handleVisionModeChange}
+              />
             </div>
+
+
+            {/* SYSTEM LOGS */}
 
             <div id="logs">
-              <LogPanel logs={systemLogs} loading={loading} />
+              <LogPanel
+                logs={systemLogs}
+                loading={loading}
+              />
             </div>
+
           </div>
+
+
+          {/* ==================================================
+              RIGHT SIDE
+              GESTURE + FACE ENROLLMENT
+          ================================================== */}
+
+          <div className="right-top-section">
+
+            {/* HUMANOID GESTURE */}
+
+            <div
+              id="humanoid-gesture"
+              className="humanoid-gesture-section"
+            >
+              <HumanoidGesture />
+            </div>
+
+
+            {/* FACE ENROLLMENT */}
+
+            <div
+              id="face-enrollment"
+              className="face-enrollment-section"
+            >
+              <FaceEnrollment />
+            </div>
+
+          </div>
+
+
+          {/* ==================================================
+              RECOGNIZED FACES
+          ================================================== */}
+
+          <div className="faces-section">
+
+            <div id="faces">
+              <FaceList
+                faces={faces}
+                loading={loading}
+              />
+            </div>
+
+          </div>
+
+
+          {/* ==================================================
+              DETECTED OBJECTS
+          ================================================== */}
+
+          <div
+            id="objects"
+            className="objects-section"
+          >
+            <ObjectList
+              objects={objects}
+              loading={loading}
+            />
+          </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }

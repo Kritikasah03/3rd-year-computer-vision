@@ -1,0 +1,231 @@
+.enrolled-database {
+  width: 100%;
+  box-sizing: border-box;
+
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+
+  padding: 20px;
+
+  color: white;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+
+.database-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 16px;
+}
+
+.database-header h2 {
+  margin: 0 0 5px 0;
+
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.database-header p {
+  margin: 0;
+
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* PERSON COUNT */
+
+.person-count {
+  flex-shrink: 0;
+
+  padding: 6px 10px;
+
+  background-color: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 20px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* PERSON LIST */
+
+.person-list {
+  width: 100%;
+
+  max-height: 250px;
+
+  overflow-y: auto;
+
+  padding-right: 5px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+/* SCROLLBAR */
+
+.person-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.person-list::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 10px;
+}
+
+.person-list::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 10px;
+}
+
+.person-list::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* PERSON ITEM */
+
+.person-item {
+  width: 100%;
+  box-sizing: border-box;
+
+  min-height: 58px;
+
+  padding: 8px 10px;
+
+  background-color: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 9px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+/* AVATAR */
+
+.person-avatar {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  background-color: #1e293b;
+
+  border: 1px solid #475569;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #facc15;
+
+  font-size: 16px;
+}
+
+/* PERSON INFO */
+
+.person-info {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.person-name {
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.person-status {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+/* DELETE BUTTON */
+
+.delete-person-btn {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  background-color: transparent;
+
+  border: 1px solid transparent;
+
+  border-radius: 6px;
+
+  color: #64748b;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.delete-person-btn:hover {
+  background-color: #3f1d1d;
+
+  border-color: #7f1d1d;
+
+  color: #ef4444;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .enrolled-database {
+    padding: 16px;
+  }
+
+  .database-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .database-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .person-list {
+    max-height: 220px;
+  }
+}

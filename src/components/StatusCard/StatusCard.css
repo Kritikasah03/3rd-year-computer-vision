@@ -7,36 +7,39 @@
 
   border: 1px solid #334155;
 
-  border-radius: 16px;
+  border-radius: 10px;
 
-  padding: 1rem;
+  padding: 0.6rem;
 
   color: white;
 
   transition: all 0.3s ease;
-  min-height: 120px;
+
+  min-height: 80px;
 
   box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.25);
+    0 3px 12px rgba(0, 0, 0, 0.2);
 }
 
 .status-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 
   border-color: #3b82f6;
 
   box-shadow:
-    0 0 20px rgba(59, 130, 246, 0.25);
+    0 0 15px rgba(59, 130, 246, 0.2);
 }
+
+/* HEADER */
 
 .status-header {
   display: flex;
 
   align-items: center;
 
-  gap: 10px;
+  gap: 6px;
 
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
 
 .status-header h3 {
@@ -44,7 +47,7 @@
 
   color: #94a3b8;
 
-  font-size: 0.95rem;
+  font-size: 0.75rem;
 
   font-weight: 500;
 }
@@ -56,23 +59,27 @@
 
   justify-content: center;
 
-  font-size: 1.2rem;
+  font-size: 0.9rem;
 
   color: #60a5fa;
 }
 
+/* VALUE */
+
 .status-value {
-  font-size: 2rem;
+  font-size: 1.35rem;
 
   font-weight: 700;
 
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 
   color: #f8fafc;
 }
 
+/* PROGRESS */
+
 .progress-bar {
-  height: 8px;
+  height: 5px;
 
   background-color: #334155;
 

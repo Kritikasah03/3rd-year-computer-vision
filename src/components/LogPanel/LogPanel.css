@@ -1,65 +1,172 @@
 .log-panel {
+  width: 100%;
+
   background-color: #1e293b;
 
   border: 1px solid #334155;
+  border-radius: 8px;
 
-  border-radius: 16px;
-
-  padding: 20px;
+  padding: 12px 14px;
 
   color: white;
 
-  min-height: 300px;
+  height: 250px;
+  min-height: 250px;
 
-  height: 100%;
+  box-sizing: border-box;
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  box-shadow: none;
 }
+
+/* =========================
+   TITLE
+========================= */
 
 .log-panel h2 {
-  margin-top: 0;
+  margin: 0 0 10px;
 
-  margin-bottom: 20px;
+  font-size: 16px;
 
-  font-size: 2rem;
+  font-weight: 600;
 
-  font-weight: 700;
+  color: #cbd5e1;
 }
+
+/* =========================
+   LOG ITEM
+========================= */
 
 .log-item {
   display: flex;
 
-  gap: 15px;
-
   align-items: center;
 
-  padding: 14px 0;
+  gap: 12px;
 
-  border-bottom: 1px solid #334155;
+  padding: 6px 0;
 
-  transition: background-color 0.3s ease;
-}
+  min-height: 24px;
 
-.log-item:last-child {
   border-bottom: none;
+
+  transition: background-color 0.2s ease;
 }
 
-.log-item:hover {
-  background-color: rgba(51, 65, 85, 0.3);
-
-  border-radius: 8px;
-}
+/* =========================
+   TIME
+========================= */
 
 .log-time {
   color: #60a5fa;
 
+  font-family: "Courier New", monospace;
+
+  font-size: 14px;
+
   font-weight: 600;
 
   min-width: 70px;
+
+  flex-shrink: 0;
 }
+
+/* =========================
+   MESSAGE
+========================= */
 
 .log-message {
   color: #e2e8f0;
 
   flex: 1;
+
+  font-family: "Courier New", monospace;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   HOVER
+========================= */
+
+.log-item:hover {
+  background-color: rgba(51, 65, 85, 0.3);
+
+  border-radius: 4px;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.log-panel::-webkit-scrollbar {
+  width: 5px;
+}
+
+.log-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-panel::-webkit-scrollbar-thumb {
+  background-color: #334155;
+
+  border-radius: 10px;
+}
+
+.log-panel::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* Firefox */
+
+.log-panel {
+  scrollbar-width: thin;
+
+  scrollbar-color: #334155 transparent;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 500px) {
+  .log-panel {
+    height: 200px;
+
+    min-height: 200px;
+
+    padding: 10px 12px;
+  }
+
+  .log-panel h2 {
+    font-size: 14px;
+
+    margin-bottom: 8px;
+  }
+
+  .log-item {
+    gap: 8px;
+
+    padding: 4px 0;
+  }
+
+  .log-time {
+    min-width: 58px;
+
+    font-size: 12px;
+  }
+
+  .log-message {
+    font-size: 12px;
+  }
 }

@@ -1,40 +1,268 @@
+/* =========================================================
+   CAMERA CONTAINER
+   No separate card - outer Camera Monitoring
+   container in App.css is the only card.
+========================================================= */
+
 .camera-container {
-  background-color: #1e293b;
+  width: 100%;
+  height: 700px !important;
+  min-height: 700px !important;
 
-  border: 1px solid #334155;
+  padding: 0;
 
-  border-radius: 16px;
+  background: transparent;
 
-  padding: 20px;
+  border: none;
+  border-radius: 0;
 
   color: white;
 
   display: flex;
   flex-direction: column;
 
-  min-height: 450px;
+  box-sizing: border-box;
+}
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+/* =========================================================
+   CAMERA HEADER
+========================================================= */
+
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 14px;
+
+  flex-shrink: 0;
 }
 
 .camera-container h2 {
-  margin-top: 0;
+  margin: 0;
 
-  margin-bottom: 20px;
-
-  font-size: 2rem;
-
+  font-size: 1.3rem;
   font-weight: 700;
+
+  color: white;
 }
+
+
+/* =========================================================
+   CAMERA STATUS
+========================================================= */
+
+.camera-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  color: #94a3b8;
+
+  padding: 6px 12px;
+
+  border: 1px solid #475569;
+  border-radius: 20px;
+
+  background-color: #0f172a;
+
+  white-space: nowrap;
+}
+
+.camera-status.live {
+  color: #cbd5e1;
+
+  border-color: #64748b;
+}
+
+
+/* =========================================================
+   VIDEO
+========================================================= */
 
 .camera-container video {
   width: 100%;
 
   flex: 1;
 
+  min-height: 0;
+
+  display: block;
+
+  background-color: #060f25;
+
+  border: 1px solid #334155;
   border-radius: 12px;
 
   object-fit: cover;
 
-  background: black;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CAMERA CONTROLS
+========================================================= */
+
+.camera-controls {
+  display: flex;
+
+  width: 100%;
+
+  gap: 10px;
+
+  margin-top: 14px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.camera-controls button {
+  flex: 1;
+
+  height: 40px;
+
+  border: none;
+  border-radius: 6px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    transform 0.2s,
+    opacity 0.2s;
+}
+
+
+/* =========================================================
+   START CAMERA BUTTON
+========================================================= */
+
+.start-camera-btn {
+  background: linear-gradient(
+    90deg,
+    #0d8bd6,
+    #2563eb
+  );
+
+  box-shadow:
+    0 2px 5px rgba(37, 99, 235, 0.25);
+}
+
+.start-camera-btn::before {
+  content: "▶ ";
+
+  font-size: 13px;
+}
+
+.start-camera-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    90deg,
+    #1598e5,
+    #3474ed
+  );
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   STOP CAMERA BUTTON
+========================================================= */
+
+.stop-camera-btn {
+  background: #dc2626;
+
+  box-shadow:
+    0 2px 5px rgba(220, 38, 38, 0.2);
+}
+
+.stop-camera-btn::before {
+  content: "■ ";
+
+  font-size: 12px;
+}
+
+.stop-camera-btn:hover:not(:disabled) {
+  background: #ef2929;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   DISABLED BUTTON
+========================================================= */
+
+.camera-controls button:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .camera-container {
+    height: 600px !important;
+    min-height: 600px !important;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+
+  .camera-container {
+    height: 450px !important;
+    min-height: 450px !important;
+  }
+
+  .camera-header {
+    margin-bottom: 12px;
+  }
+
+  .camera-container h2 {
+    font-size: 1.15rem;
+  }
+
+  .camera-status {
+    font-size: 0.75rem;
+
+    padding: 5px 9px;
+  }
+
+  .camera-controls {
+    gap: 8px;
+
+    margin-top: 10px;
+  }
+
+  .camera-controls button {
+    height: 38px;
+
+    font-size: 12px;
+  }
+
 }

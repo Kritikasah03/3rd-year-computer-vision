@@ -1,0 +1,304 @@
+/* =========================================================
+   HUMANOID GESTURE
+========================================================= */
+
+.humanoid-gesture {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+
+  box-sizing: border-box;
+
+  background-color: #1e293b;
+
+  border: 1px solid #334155;
+
+  border-radius: 16px;
+
+  padding: 18px 20px;
+
+  color: white;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.gesture-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  margin-bottom: 14px;
+
+  flex-shrink: 0;
+}
+
+.gesture-header h2 {
+  margin: 0 0 4px 0;
+
+  font-size: 1.3rem;
+
+  font-weight: 700;
+}
+
+.gesture-header p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   DETECTION INFO
+========================================================= */
+
+.gesture-detection {
+  min-width: 150px;
+
+  padding: 8px 12px;
+
+  background-color: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 9px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 1px;
+
+  flex-shrink: 0;
+}
+
+.gesture-detection span {
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+.gesture-detection strong {
+  color: #e2e8f0;
+
+  font-size: 14px;
+}
+
+.gesture-detection small {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   GESTURE GRID
+========================================================= */
+
+.gesture-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  padding-right: 4px;
+
+  min-height: 0;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.gesture-grid::-webkit-scrollbar {
+  width: 5px;
+}
+
+.gesture-grid::-webkit-scrollbar-track {
+  background: #0f172a;
+
+  border-radius: 10px;
+}
+
+.gesture-grid::-webkit-scrollbar-thumb {
+  background: #475569;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   GESTURE CARD
+========================================================= */
+
+.gesture-btn {
+  width: 100%;
+
+  min-width: 0;
+
+  min-height: 82px;
+
+  padding: 10px 8px;
+
+  background-color: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 9px;
+
+  color: #cbd5e1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.gesture-icon {
+  font-size: 25px;
+
+  line-height: 1;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #f7c80d;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.gesture-label {
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   ACTIVE GESTURE
+========================================================= */
+
+.gesture-btn.active {
+  background: linear-gradient(
+    135deg,
+    #1d4ed8,
+    #4338ca
+  );
+
+  border-color: #3b82f6;
+
+  color: white;
+
+  box-shadow:
+    0 0 10px rgba(59, 130, 246, 0.25);
+}
+
+.gesture-btn.active .gesture-icon {
+  color: white;
+}
+
+.gesture-btn.active .gesture-label {
+  color: white;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .gesture-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .gesture-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .gesture-detection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    align-items: flex-start;
+  }
+
+  .gesture-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .gesture-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .gesture-btn {
+    min-height: 75px;
+  }
+}

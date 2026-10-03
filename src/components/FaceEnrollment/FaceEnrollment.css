@@ -1,0 +1,359 @@
+/* =========================
+   FACE ENROLLMENT
+========================= */
+
+.face-enrollment {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background-color: #1e293b;
+
+  border: 1px solid #334155;
+  border-radius: 16px;
+
+  padding: 20px;
+
+  color: white;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.enrollment-header {
+  margin-bottom: 18px;
+
+  flex-shrink: 0;
+}
+
+.enrollment-header h2 {
+  margin: 0 0 5px;
+
+  font-size: 1.3rem;
+
+  font-weight: 700;
+}
+
+.enrollment-header p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+/* =========================
+   NAME FIELD
+========================= */
+
+.name-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin-bottom: 16px;
+
+  flex-shrink: 0;
+}
+
+.name-field label {
+  color: #cbd5e1;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.name-field input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  background: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 8px;
+
+  color: white;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.name-field input::placeholder {
+  color: #64748b;
+}
+
+.name-field input:focus {
+  border-color: #3b82f6;
+
+  box-shadow:
+    0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+/* =========================
+   ENROLLMENT ACTIONS
+========================= */
+
+.enrollment-actions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+
+  flex-shrink: 0;
+}
+
+.enrollment-btn {
+  min-height: 48px;
+
+  padding: 10px 14px;
+
+  background: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 8px;
+
+  color: #cbd5e1;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.enrollment-btn:hover {
+  background: #1e293b;
+
+  border-color: #475569;
+
+  color: white;
+
+  transform: translateY(-1px);
+}
+
+.enrollment-icon {
+  font-size: 17px;
+
+  color: #60a5fa;
+}
+
+/* =========================
+   TRAIN MODEL
+========================= */
+
+.train-model-btn {
+  width: 100%;
+
+  min-height: 46px;
+
+  padding: 10px 14px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #4338ca
+    );
+
+  border: 1px solid #3b82f6;
+
+  border-radius: 8px;
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  flex-shrink: 0;
+}
+
+.train-model-btn:hover {
+  background:
+    linear-gradient(
+      90deg,
+      #3474ed,
+      #5146d8
+    );
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.train-icon {
+  font-size: 15px;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.enrollment-status {
+  margin-top: 12px;
+
+  padding: 9px 12px;
+
+  background: #0f172a;
+
+  border: 1px solid #334155;
+
+  border-radius: 7px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+  text-align: center;
+
+  flex-shrink: 0;
+}
+
+/* =========================
+   ENROLLED DATABASE
+========================= */
+
+.enrolled-database-wrapper {
+  width: 100%;
+
+  margin-top: 20px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #334155;
+
+  /*
+    Keep the original large database area.
+    This also gives the logs a matching height.
+  */
+  height: 420px;
+
+  min-height: 420px;
+
+  overflow: hidden;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+/*
+   If the database list is a separate element,
+   it can use the remaining space.
+*/
+
+.enrolled-database-wrapper > * {
+  min-height: 0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+  .face-enrollment {
+    padding: 16px;
+  }
+
+  .enrollment-header {
+    margin-bottom: 14px;
+  }
+
+  .enrollment-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .enrollment-header p {
+    font-size: 12px;
+  }
+
+  .name-field {
+    margin-bottom: 14px;
+  }
+
+  .enrollment-actions {
+    gap: 8px;
+  }
+
+  .enrollment-btn {
+    min-height: 44px;
+
+    padding: 8px 10px;
+
+    font-size: 12px;
+  }
+
+  .train-model-btn {
+    min-height: 44px;
+
+    font-size: 12px;
+  }
+
+  .enrollment-status {
+    font-size: 11px;
+  }
+
+  .enrolled-database-wrapper {
+    height: 300px;
+
+    min-height: 300px;
+
+    margin-top: 16px;
+
+    padding-top: 16px;
+  }
+}
