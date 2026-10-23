@@ -1,23 +1,12 @@
+
 import { useState } from "react";
 import "./VisionEngine.css";
 
 const VISION_MODES = [
-  {
-    id: "full",
-    label: "Full Vision Engine",
-  },
-  {
-    id: "face",
-    label: "Multi Face Only",
-  },
-  {
-    id: "gesture",
-    label: "Gesture Only",
-  },
-  {
-    id: "objects",
-    label: "Objects Only",
-  },
+  { id: "full", label: "Full Vision Engine" },
+  { id: "face", label: "Multi Face Only" },
+  { id: "gesture", label: "Gesture Only" },
+  { id: "objects", label: "Objects Only" },
 ];
 
 function VisionEngine({ onModeChange }) {
@@ -26,8 +15,6 @@ function VisionEngine({ onModeChange }) {
   const handleModeChange = (mode) => {
     setActiveMode(mode);
 
-    // Send selected mode to the parent.
-    // Later the parent can connect this to the backend API.
     if (onModeChange) {
       onModeChange(mode);
     }
@@ -35,7 +22,6 @@ function VisionEngine({ onModeChange }) {
 
   return (
     <div className="vision-engine">
-
       <div className="vision-mode-grid">
         {VISION_MODES.map((mode) => (
           <button

@@ -1,26 +1,28 @@
+
 .face-list {
   background-color: #1e293b;
-
   border: 1px solid #334155;
-
   border-radius: 16px;
-
   padding: 20px;
-
   color: white;
 
-  height: 100%;
+  /* Keep the card height stable */
+  height: 200px;
+  min-height: 200px;
+  max-height: 200px;
+  box-sizing: border-box;
+
+  /* Scroll inside the card when more faces appear */
+  overflow-y: auto;
+  overflow-x: hidden;
 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .face-list h2 {
   margin-top: 0;
-
   margin-bottom: 20px;
-
   font-size: 1.3rem;
-
   font-weight: 700;
 }
 
@@ -30,38 +32,38 @@
 
 .face-info {
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
-
   margin-bottom: 8px;
-
   font-size: 1rem;
-
   font-weight: 500;
+  gap: 12px;
+}
+
+.face-info span {
+  overflow-wrap: anywhere;
 }
 
 .face-bar {
   height: 8px;
-
   background-color: #334155;
-
   border-radius: 20px;
-
   overflow: hidden;
 }
 
 .face-fill {
   height: 100%;
-
-  background: linear-gradient(
-    90deg,
-    #f59e0b,
-    #ef4444
-  );
-
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
   border-radius: 20px;
-
   transition: width 0.3s ease;
+}
+
+/* Keep the same fixed height on smaller screens */
+@media (max-width: 600px) {
+  .face-list {
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    padding: 16px;
+  }
 }

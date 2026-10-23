@@ -1,6 +1,7 @@
+
 import "./LogPanel.css";
 
-function LogPanel({ logs, loading }) {
+function LogPanel({ logs = [], loading }) {
   if (loading) {
     return (
       <div className="log-panel">
@@ -9,17 +10,32 @@ function LogPanel({ logs, loading }) {
       </div>
     );
   }
+
   return (
     <div className="log-panel">
       <h2>System Logs</h2>
 
-      {logs.map((log) => (
-        <div key={log.id} className="log-item">
-          <span className="log-time">{log.time}</span>
+      {logs.length === 0 ? (
+        <p>No system logs available.</p>
+      ) : (
+        logs.map((log, index) => (
+          <div
+            key={log.id ?? index}
+            className="log-item"
+          >
+            <span className="log-time">
+              {log.timestamp
+                ? new Date(log.timestamp).toLocaleTimeString()
+                : log.time ?? "--:--:--"}
+            </span>
 
-          <span className="log-message">{log.message}</span>
-        </div>
-      ))}
+            <span className="log-message">
+              {log.level ? `[${log.level}] ` : ""}
+              {log.message}
+            </span>
+          </div>
+        ))
+      )}
     </div>
   );
 }
